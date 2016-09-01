@@ -4,30 +4,37 @@
 
 #include <stdio.h>
 //#include "server.h"
-#include <sys/socket.h>.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
 #include <assert.h>
 
 int main ()
 {
-  struct sockaddr_in sockfd;
-  struct sockaddr_in name;
-  struct sockaddr_in clien_name;
+  int server_sock;
+  //  int client_sock;
 
-  sockfd = socket(PF_INET, SOCK_STREAM, 0);
-  assert(sockfd > -1);
+  struct sockaddr_in server_addr;
+  struct sockaddr_in client_addr;
 
-  assert (bind(sockfd, (struct sockaddr *)&name, sizeof(name)) > -1);
+  unsigned int server_port = 1234;
+  unsigned int client_len;
 
-  listen(sockfd, 5);
+  server_sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+  assert(server_sock > -1);
+  
+
+  server_addr.sin_family = AF_INET;
+  server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+  server_addr.sin_port = htons(server_port);
+
+  assert(bind(server_sock, (struct sockaddr *) &server_addr, sizeof(server_addr)) > -1);
+  assert(listen(server_sock, 5) > -1);
 
   while (1) {
-    accept(sockfd, (struct sockaddr *)&client_name, &client_name_len);
-  }
+    assert(accept(server_sock, (struct sockaddr *) &client_addr, &client_len) > -1);
 
-
-
-  
-  
-  
+    printf("Handling client %s\n", inet_ntoa(client_addr.sin_addr));
+    
+  }  
   return 0;
 }
