@@ -7,7 +7,8 @@
 #include <netdb.h>
 #include <string.h>
 
-int main ()
+
+int main (int argc, char *argv[])
 {
   
   char str[100];
@@ -28,6 +29,7 @@ int main ()
   listen(listen_fd, 10);
 
   comm_fd = accept(listen_fd, (struct sockaddr*) NULL, NULL);
+
 
   while(1)
   {
